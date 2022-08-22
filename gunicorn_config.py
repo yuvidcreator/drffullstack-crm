@@ -1,0 +1,9 @@
+bind = "0.0.0.0:8000"
+reload = True
+timeout = 90
+wokers = 3
+capture_output = True
+wsgi_app = "venya.wsgi:application"
+daemon = True
+access_log = "/var/log/venya/gunciron.out.log"
+error_log = "/var/log/venya/gunciron.err.log"
