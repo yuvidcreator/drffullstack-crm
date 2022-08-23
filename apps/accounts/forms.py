@@ -15,7 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
             "is_manager",
             "is_accountant",
             "is_salesman",
-            "is_customer"
+            "is_customer",
         ]
         error_class = "error"
 
@@ -32,6 +32,6 @@ class CustomUserChangeForm(UserChangeForm):
             "is_manager",
             "is_accountant",
             "is_salesman",
-            "is_customer"
+            "is_customer",
         ]
         error_class = "error"

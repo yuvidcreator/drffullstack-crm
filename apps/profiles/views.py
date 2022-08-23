@@ -10,7 +10,6 @@ from .models import Profile
 from .renderers import ProfileJSONRenderer
 from .serializers import ProfileSerializer, UpdateProfileSerializer
 
-
 # Create your views here.
 
 
@@ -18,6 +17,7 @@ class CustomerListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = User.objects.filter(is_customer=True)
     serializer_class = UserSerializer
+
 
 """
     # Function Base API View
@@ -30,7 +30,6 @@ class CustomerListAPIView(generics.ListAPIView):
         name_spaced_response={"customers": serializer.data}
         return Response(name_spaced_response,status=status.HTTP_200_OK)
 """
-
 
 
 class GetProfileAPIView(APIView):

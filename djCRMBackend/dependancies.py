@@ -1,11 +1,11 @@
+import base64
+import json
 import os
 from threading import Thread
 from uuid import uuid4
-import base64
-import json
+
 import requests as req
 from django.conf import settings
-
 
 
 def path_and_rename(instance, filename):

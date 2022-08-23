@@ -1,10 +1,11 @@
-from django.db import transaction, IntegrityError
+from django.db import IntegrityError, transaction
 from djoser.conf import settings
-from rest_framework.response import Response
+from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
+from rest_framework.response import Response
+
 from apps.accounts.models import User
 from apps.profiles.models import Profile
-from djoser.serializers import UserCreateSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,13 +13,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [ 
+        fields = [
             "id",
             "pkid",
-            "first_name", 
-            "last_name", 
-            "full_name", 
-            "email", 
+            "first_name",
+            "last_name",
+            "full_name",
+            "email",
             "mobile",
             "is_staff",
             "is_active",
@@ -27,12 +28,12 @@ class UserSerializer(serializers.ModelSerializer):
             "is_manager",
             "is_accountant",
             "is_salesman",
-            "is_customer"
+            "is_customer",
         ]
-    
+
     def get_first_name(self, obj):
         return obj.first_name.title()
-    
+
     def get_last_name(self, obj):
         return obj.last_name.title()
 
@@ -59,7 +60,6 @@ class UserSerializer(serializers.ModelSerializer):
         return represenatation
 
 
-
 class TokenSerializer(serializers.ModelSerializer):
     auth_token = serializers.CharField(source="key")
     is_staff = serializers.BooleanField(source="user.is_staff")
@@ -71,8 +71,15 @@ class TokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = settings.TOKEN_MODEL
-        fields = ("auth_token", "is_staff", "is_mainadmin", "is_manager", "is_accountant", "is_salesman", "is_customer")
-
+        fields = (
+            "auth_token",
+            "is_staff",
+            "is_mainadmin",
+            "is_manager",
+            "is_accountant",
+            "is_salesman",
+            "is_customer",
+        )
 
 
 class CreateUserSerializer(UserCreateSerializer):
@@ -97,5 +104,5 @@ class CreateUserSerializer(UserCreateSerializer):
             "is_accountant",
             "is_salesman",
             "is_customer",
-            "password"
+            "password",
         ]

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from apps.profiles.models import Profile
 
 
@@ -63,7 +64,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         if instance.is_employee:
             represenatation["is_employee"] = True
         return represenatation
-
 
 
 class UpdateProfileSerializer(serializers.ModelSerializer):

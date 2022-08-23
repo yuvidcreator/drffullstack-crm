@@ -1,10 +1,12 @@
 import re
+
 from django.db.models import Q
+
 from apps.accounts.models import User
 
 
 def password_validation(password: str):
-    """ ### password validation """
+    """### password validation"""
     if len(password) < 8:
         return "Password must be more than 8 chanracter"
     elif not re.search("[a-z]", password):
