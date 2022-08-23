@@ -20,3 +20,7 @@ black
 isort
 wheel
 twilio
+pytest-django
+pytest-factoryboy
+Faker
+pytest-cov
