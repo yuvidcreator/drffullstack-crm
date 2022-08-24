@@ -17,11 +17,11 @@ down:
 show-logs:
 	docker compose logs
 
-makemigrations:
-	docker compose exec api python3 manage.py makemigrations
-
 migrate:
 	docker compose exec api python3 manage.py migrate
+
+makemigrations:
+	docker compose exec api python3 manage.py makemigrations
 
 superuser:
 	docker compose exec api python3 manage.py createsuperuser

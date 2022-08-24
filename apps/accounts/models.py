@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import RegexValidator
 
 from apps.accounts.managers import CustomUserManager
 
@@ -16,7 +17,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     username = None
     email = models.EmailField(verbose_name=_("Email Address"), unique=True)
-    mobile = models.IntegerField(
+    mobile_regex = RegexValidator(
+        regex=r'^\+?91?\d{9,12}$', 
+        message="Phone number must be entered in the format: '+919999999999'. Up to 10 digits allowed."
+    )
+    mobile = models.CharField(
+        validators=[mobile_regex],
+        max_length=13,
         verbose_name=_("Mobile No"),
         unique=True,
         null=True,
