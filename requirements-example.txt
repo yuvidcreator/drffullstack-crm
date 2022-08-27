@@ -5,6 +5,7 @@ djangorestframework-simplejwt
 djoser
 django-cors-headers
 django-filter
+django-jazzmin
 # django-countries
 django-autoslug
 #django-dbbackup
