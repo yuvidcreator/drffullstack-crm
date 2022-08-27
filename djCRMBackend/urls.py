@@ -34,6 +34,6 @@ urlpatterns = [
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-admin.site.site_header = "Super User Panel"
-admin.site.site_title = "My Super User Panel"
-admin.site.index_title = "Welcome User"
+admin.site.site_header = "Yantrayug Herohub"
+admin.site.site_title = "Yantrayug Herohub Admin Panel"
+admin.site.index_title = "Welcome to Yantrayug Herohub"
