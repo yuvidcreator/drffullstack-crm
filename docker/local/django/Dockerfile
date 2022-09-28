@@ -1,7 +1,7 @@
-FROM python:3.10.0-slim-buster
+FROM python:3.10-slim-buster
 
 ENV APP_HOME=/app
-RUN mkdir $APP_HOME
+RUN mkdir -p $APP_HOME
 RUN mkdir -p $APP_HOME/staticfiles
 WORKDIR $APP_HOME
 
@@ -26,7 +26,9 @@ RUN pip3 install --upgrade pip
 
 COPY ./requirements.txt /app
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# RUN pip3 install -r requirements.txt
 
 COPY ./docker/local/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
