@@ -9,13 +9,25 @@ services:
         volumes:
             - .:/app
             - static_volume:/app/staticfiles
-            - media_volume:/app/media
-        ports:
+            - media_volume:/app/mediafiles
+        expose:
             - "8000"
         env_file:
             - .env
         depends_on:
             - postgres-db
+            - redis
+        networks:
+            - yantrayug-djreact
+
+    client:
+        build:
+            context: ./client
+            dockerfile: Dockerfile.dev
+        restart: on-failure
+        volumes:
+            - ./client:/app
+            - /app/node_modules
         networks:
             - yantrayug-djreact
 
@@ -29,6 +41,43 @@ services:
             - POSTGRES_DB=${POSTGRES_DB}
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        networks:
+            - yantrayug-djreact
+
+    redis:
+        image: redis:5-alpine
+        networks:
+            - yantrayug-djreact
+
+    celery_worker:
+        build:
+            context: .
+            dockerfile: ./docker/local/django/Dockerfile
+        command: /start-celeryworker
+        volumes:
+            - .:/app
+        env_file: 
+            - .env
+        depends_on:
+            - redis
+            - postgres-db
+        networks:
+            - yantrayug-djreact
+
+    flower:
+        build:
+            context: .
+            dockerfile: ./docker/local/django/Dockerfile
+        command: /start-flower
+        volumes: 
+            - .:/app
+        env_file:
+            - .env
+        ports:
+            - "5557:5555"
+        depends_on:
+                - redis
+                - postgres-db
         networks:
             - yantrayug-djreact
 

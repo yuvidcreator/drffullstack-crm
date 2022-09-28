@@ -34,20 +34,20 @@ DEBUG = env("DEBUG")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
-# ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(" ")
 # ALLOWED_HOSTS = env(
 #     "ALLOWED_HOSTS", cast=lambda hosts: [host.strip() for host in hosts.split(",")]
 # )
-ALLOWED_HOSTS = ["localhost","127.0.0.1"]
+print(ALLOWED_HOSTS)
 
 
 # Application definition
 
 DJANGO_APPS = [
     "jazzmin",
+    "django.contrib.contenttypes",
     "django.contrib.admin",
     "django.contrib.auth",
-    "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -62,6 +62,7 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
     "django_filters",
+    "djcelery_email",
 ]
 
 LOCAL_APPS = [
@@ -182,11 +183,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "/staticfiles/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIR = []
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/mediafiles/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 
 # Default primary key field type
@@ -400,16 +401,33 @@ DJOSER = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
 ]
 
 
-EMAIL_BACKEND = env("EMAIL_BACKEND")
-EMAIL_HOST = env("EMAIL_HOST")
-EMAIL_USE_TLS = env("EMAIL_USE_TLS")
-EMAIL_PORT = env("EMAIL_PORT")
-EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-EMAIL_FROM = env("EMAIL_FROM")
+# EMAIL_BACKEND = env("EMAIL_BACKEND")
+# EMAIL_HOST = env("EMAIL_HOST")
+# EMAIL_USE_TLS = env("EMAIL_USE_TLS")
+# EMAIL_PORT = env("EMAIL_PORT")
+# EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+# EMAIL_FROM = env("EMAIL_FROM")
+
+
+EMAIL_BACKEND = env("CLRY_EMAIL_BACKEND")
+EMAIL_HOST = env("CLRY_EMAIL_HOST")
+EMAIL_USE_TLS = env("CLRY_EMAIL_USE_TLS")
+EMAIL_PORT = env("CLRY_EMAIL_PORT")
+EMAIL_HOST_USER = env("CLRY_EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("CLRY_EMAIL_HOST_PASSWORD")
+EMAIL_FROM = env("CLRY_EMAIL_FROM")
+
+
+CELERY_BROKER_URL = env("CELERY_BROKER")
+CELERY_RESULT_BACKEND = env("CELERY_BACKEND")
+CELERY_TIMEZONE = "Asia/Kolkata"
+
 
 PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 180
 USER_SIGNUP_TOKEN_EXPIRE_MINUTES: int = 180

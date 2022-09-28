@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -o errexit
+
+set -o nounset
+
+watchmedo auto-restart -d djCRMBackend/ -p "*.py" -- celery worker -A djCRMBackend --loglevel=info
