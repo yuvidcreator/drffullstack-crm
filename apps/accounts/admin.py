@@ -19,15 +19,18 @@ class UserAdmin(BaseUserAdmin):
         "email",
         "mobile",
         "is_staff",
+        "is_employee",
         "is_customer",
         "is_active",
     ]
     list_display_links = list_display
     list_filter = [
+        "username",
         "email",
         "mobile",
         "first_name",
         "last_name",
+        "is_employee",
         "is_customer",
         "is_active",
     ]
@@ -45,6 +48,7 @@ class UserAdmin(BaseUserAdmin):
             _("Personal Information"),
             {
                 "fields": (
+                    "username",
                     "mobile",
                     "first_name",
                     "last_name",
@@ -59,10 +63,7 @@ class UserAdmin(BaseUserAdmin):
                     "is_active",
                     "is_staff",
                     "is_superuser",
-                    "is_mainadmin",
-                    "is_manager",
-                    "is_accountant",
-                    "is_salesman",
+                    "is_employee",
                     "is_customer",
                     "groups",
                     "user_permissions",
@@ -80,7 +81,7 @@ class UserAdmin(BaseUserAdmin):
             },
         ),
     )
-    search_fields = ["email", "mobile", "first_name", "last_name"]
+    search_fields = ["username", "email", "mobile"]
 
 
 admin.site.register(User, UserAdmin)

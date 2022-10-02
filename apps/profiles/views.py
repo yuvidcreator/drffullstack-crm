@@ -6,9 +6,9 @@ from apps.accounts.models import User
 from apps.accounts.serializers import UserSerializer
 
 from .exceptions import NotYourProfile, ProfileNotFound
-from .models import Profile
-from .renderers import ProfileJSONRenderer
-from .serializers import ProfileSerializer, UpdateProfileSerializer
+from .models import Employee, Customer
+from .renderers import EmployeeJSONRenderer, CustomerJSONRenderer
+from .serializers import (EmployeeSerializer, UpdateEmployeeSerializer, CustomerSerializer, UpdateCustomerSerializer)
 
 # Create your views here.
 
@@ -32,27 +32,27 @@ class CustomerListAPIView(generics.ListAPIView):
 """
 
 
-class GetProfileAPIView(APIView):
+class GetEmployeAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [ProfileJSONRenderer]
+    renderer_classes = [EmployeeJSONRenderer]
 
     def get(self, request):
         user = self.request.user
-        user_profile = Profile.objects.get(user=user)
-        serializer = ProfileSerializer(user_profile, context={"request": request})
+        user_profile = Employee.objects.get(user=user)
+        serializer = EmployeeSerializer(user_profile, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class UpdateProfileAPIView(APIView):
+class UpdateEmployeeAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [ProfileJSONRenderer]
+    renderer_classes = [EmployeeJSONRenderer]
 
-    serializer_class = UpdateProfileSerializer
+    serializer_class = UpdateEmployeeSerializer
 
     def patch(self, request, pkid):
         try:
-            Profile.objects.get(user_id=pkid)
-        except Profile.DoesNotExist:
+            Employee.objects.get(user_id=pkid)
+        except Employee.DoesNotExist:
             raise ProfileNotFound
 
         user_id = request.user.pkid
@@ -60,8 +60,8 @@ class UpdateProfileAPIView(APIView):
             raise NotYourProfile
 
         data = request.data
-        serializer = UpdateProfileSerializer(
-            instance=request.user.profiles, data=data, partial=True
+        serializer = UpdateEmployeeSerializer(
+            instance=request.user.employee_profiles, data=data, partial=True
         )
 
         serializer.is_valid()

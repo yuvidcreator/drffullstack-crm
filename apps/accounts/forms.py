@@ -8,13 +8,9 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = [
             "email",
-            "mobile",
             "first_name",
             "last_name",
-            "is_mainadmin",
-            "is_manager",
-            "is_accountant",
-            "is_salesman",
+            "is_employee",
             "is_customer",
         ]
         error_class = "error"
@@ -25,13 +21,9 @@ class CustomUserChangeForm(UserChangeForm):
         model = User
         fields = [
             "email",
-            "mobile",
             "first_name",
             "last_name",
-            "is_mainadmin",
-            "is_manager",
-            "is_accountant",
-            "is_salesman",
+            "is_employee",
             "is_customer",
         ]
         error_class = "error"

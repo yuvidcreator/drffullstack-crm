@@ -15,15 +15,15 @@ from apps.accounts.managers import CustomUserManager
 class User(AbstractBaseUser, PermissionsMixin):
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    username = None
     email = models.EmailField(verbose_name=_("Email Address"), unique=True)
+    username = models.CharField(verbose_name=_("Username"), max_length=20, unique=True, blank=True, null=True)
     mobile_regex = RegexValidator(
-        regex=r'^\+?91?\d{9,12}$', 
-        message="Phone number must be entered in the format: '+919999999999'. Up to 10 digits allowed."
+        regex=r'^\d{9,10}$', 
+        message="Phone number must be entered in the format: '9999999999'. Up to 10 digits allowed."
     )
     mobile = models.CharField(
         validators=[mobile_regex],
-        max_length=13,
+        max_length=10,
         verbose_name=_("Mobile No"),
         unique=True,
         null=True,
@@ -42,26 +42,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     # User Level flags
-    is_blocked = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
-    is_mainadmin = models.BooleanField(default=False, verbose_name=_("Is Admin"))
-    is_manager = models.BooleanField(default=False, verbose_name=_("Is Manager"))
-    is_accountant = models.BooleanField(default=False, verbose_name=_("Is Accountant"))
-    is_salesman = models.BooleanField(default=False, verbose_name=_("Is Salesman"))
+    is_employee = models.BooleanField(default=False, verbose_name=_("Is Employee"))
     is_customer = models.BooleanField(default=False, verbose_name=_("Is Customer"))
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [
-        "mobile",
         "first_name",
         "last_name",
-        "is_mainadmin",
-        "is_manager",
-        "is_accountant",
-        "is_salesman",
-        "is_customer",
+        "is_employee"
     ]
 
     objects = CustomUserManager()

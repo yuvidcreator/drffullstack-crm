@@ -1,9 +1,13 @@
+import MyDispatch from "./pages/MyDispatch";
 
 
 function App() {
   return (
-    <div className="">
+    <div>
       <h1>Hello Yuvraaj</h1>
+      <h2>How are you?</h2>
+      <br />
+      <MyDispatch />
     </div>
   );
 }

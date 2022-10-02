@@ -69,6 +69,7 @@ LOCAL_APPS = [
     "apps.accounts",
     "apps.common",
     "apps.profiles",
+    "apps.mydispatch",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -403,6 +404,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3001",
+    
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
 ]
 
 

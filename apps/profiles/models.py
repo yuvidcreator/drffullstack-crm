@@ -1,13 +1,13 @@
 import datetime
+from email.policy import default
 import uuid
-from unittest.mock import DEFAULT
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import RegexValidator
 
 from apps.common.models import TimeStampUUIDModel
 from djCRMBackend.dependancies import path_and_rename
@@ -18,6 +18,16 @@ from djCRMBackend.dependancies import path_and_rename
 User = get_user_model()
 
 
+def employee_kyc_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+        return 'employees/kyc/user_{0}/{1}'.format(instance.user.pkid, filename)
+
+
+def customer_kyc_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+        return 'customers/kyc/user_{0}/{1}'.format(instance.user.pkid, filename)
+
+
 class Gender(models.TextChoices):
     MALE = "Male", _("Male")
     FEMALE = "Female", _("Female")
@@ -26,14 +36,14 @@ class Gender(models.TextChoices):
 
 
 # Profiles Model
-class Profile(TimeStampUUIDModel):
-    user = models.ForeignKey(User, related_name="profiles", on_delete=models.CASCADE)
+class Employee(TimeStampUUIDModel):
+    user = models.OneToOneField(User, related_name="employee_profiles", on_delete=models.CASCADE)
     emp_id = models.CharField(max_length=50, blank=True, verbose_name=_("Employee ID"))
     profile_picture = models.ImageField(
         default="default.jpg",
-        upload_to="profiles/profile_pics",
+        upload_to=employee_kyc_path,
         blank=True,
-        verbose_name=_("Profile Image"),
+        verbose_name=_("Employee's Image"),
     )
     date_of_birth = models.DateField(
         blank=True, null=True, verbose_name=_("Date of Birth")
@@ -45,10 +55,10 @@ class Profile(TimeStampUUIDModel):
         default=Gender.SELECT,
         blank=True,
     )
-    address_line_1 = models.CharField(
+    address_line1 = models.CharField(
         max_length=255, blank=True, verbose_name=_("Address Line 1")
     )
-    address_line_2 = models.CharField(
+    address_line2 = models.CharField(
         max_length=255, blank=True, verbose_name=_("Address Line 2")
     )
     city = models.CharField(max_length=255, blank=True, verbose_name=_("City"))
@@ -57,14 +67,28 @@ class Profile(TimeStampUUIDModel):
     country = models.CharField(
         max_length=255, blank=True, verbose_name=_("Country"), default="India"
     )
-    about_me = models.TextField(blank=True, verbose_name=_("About Me"))
+    about_me = models.TextField(blank=True, verbose_name=_("About Employee"))
     eduaction = models.CharField(
-        max_length=255, blank=True, verbose_name=_("Educational Qual.")
+        max_length=255, blank=True, verbose_name=_("Educational Qualification")
     )
     work_experience = models.CharField(
         max_length=255, blank=True, verbose_name=_("Work Experience")
     )
-    pan_no = models.CharField(max_length=20, blank=True, verbose_name=_("PAN No"))
+    adhaar_no = models.PositiveBigIntegerField(
+        default=000000000000, blank=True, verbose_name=_("Adhaar No")
+    )
+    adhaar_certificate1 = models.FileField(
+        upload_to=employee_kyc_path, blank=True, verbose_name=_("Adhaar Certificate Front")
+    )
+    adhaar_certificate2 = models.FileField(
+        upload_to=employee_kyc_path, blank=True, verbose_name=_("Adhaar Certificate Back")
+    )
+    pan_no = models.CharField(
+        max_length=20, blank=True, verbose_name=_("PAN No"), unique=True
+    )
+    pan_certificate = models.FileField(
+        upload_to=employee_kyc_path, blank=True, verbose_name=_("Upload PAN")
+    )
     bank_details = models.CharField(
         max_length=255, blank=True, verbose_name=_("Bank Details")
     )
@@ -72,14 +96,26 @@ class Profile(TimeStampUUIDModel):
     is_mobile_verified = models.BooleanField(
         default=False, verbose_name=_("Mobile verified")
     )
-    status = models.BooleanField(default=False, verbose_name=_("Profile Status"))
-    is_employee = models.BooleanField(default=False, verbose_name=_("Is Employee"))
+    status = models.BooleanField(default=False, verbose_name=_("Employee Status"))
+
+    is_admin = models.BooleanField(
+        default=False, verbose_name=_("Is Admin")
+    )
+    is_manager = models.BooleanField(
+        default=False, verbose_name=_("Is Manager")
+    )
+    is_accountant = models.BooleanField(
+        default=False, verbose_name=_("Is Accountant")
+    )
+    is_salesman = models.BooleanField(
+        default=False, verbose_name=_("Is Salesman")
+    )
     is_deliveryboy = models.BooleanField(
         default=False, verbose_name=_("Is Delivery Boy")
     )
-    top_employee = models.BooleanField(default=False, verbose_name=_("Top Employee"))
-    check_in = models.TimeField(verbose_name=_("Check In"), blank=True, null=True)
-    check_out = models.TimeField(verbose_name=_("Check Out"), blank=True, null=True)
+    top_employee = models.BooleanField(
+        default=False, verbose_name=_("Top Employee")
+    )
     rating = models.DecimalField(
         max_digits=4, decimal_places=2, null=True, blank=True, verbose_name=_("Ratings")
     )
@@ -92,13 +128,17 @@ class Profile(TimeStampUUIDModel):
 
 
 class Customer(TimeStampUUIDModel):
-    user = models.ForeignKey(User, related_name="customers", on_delete=models.CASCADE)
-    about_me = models.TextField(blank=True, verbose_name=_("About Me"))
+    user = models.OneToOneField(User, related_name="customer_profiles", on_delete=models.CASCADE)
+    mobile_regex = RegexValidator(
+        regex=r'^\d{9,10}$', 
+        message="Phone number must be entered in the format: '9999999999'. Up to 10 digits allowed."
+    )
+    about_me = models.TextField(blank=True, null=True, verbose_name=_("About Customer"))
     profile_picture = models.ImageField(
         default="default.jpg",
-        upload_to="customers/profile_pics",
+        upload_to=customer_kyc_path,
         blank=True,
-        verbose_name=_("Profile Image"),
+        verbose_name=_("Customer's Image"),
     )
     date_of_birth = models.DateField(
         blank=True, null=True, verbose_name=_("Date of Birth")
@@ -107,64 +147,104 @@ class Customer(TimeStampUUIDModel):
         max_length=20,
         verbose_name=_("Gender"),
         choices=Gender.choices,
-        default="--",
+        default=_("---"),
         blank=True,
     )
     address_line_1 = models.CharField(
-        max_length=255, blank=True, verbose_name=_("Address Line 1")
+        max_length=255, blank=True, null=True, verbose_name=_("Address Line 1")
     )
     address_line_2 = models.CharField(
-        max_length=255, blank=True, verbose_name=_("Address Line 2")
+        max_length=255, blank=True, null=True, verbose_name=_("Address Line 2")
     )
-    city = models.CharField(max_length=255, blank=True, verbose_name=_("City"))
-    zip_code = models.CharField(max_length=10, blank=True, verbose_name=_("Zip Code"))
-    state = models.CharField(max_length=255, blank=True, verbose_name=_("State"))
+    city = models.CharField(
+        max_length=255, blank=True, default=_("Pune"), verbose_name=_("City")
+    )
+    zip_code = models.CharField(
+        max_length=10, blank=True, verbose_name=_("Zip Code")
+    )
+    state = models.CharField(
+        max_length=255, blank=True, default=_("Maharashtra"), verbose_name=_("State")
+    )
     country = models.CharField(
-        max_length=255, blank=True, verbose_name=_("Country"), default="India"
+        max_length=255, blank=True, verbose_name=_("Country"), default=_("India")
     )
 
     # Business Related
     business_name = models.CharField(
-        max_length=50, blank=True, verbose_name=_("Business Name")
+        max_length=50, blank=True, null=True, verbose_name=_("Business Name"), unique=True
     )
-    business_wano = models.IntegerField(
-        default=910000000000, blank=True, verbose_name=_("Business WhatsApp No.")
+    business_wano = models.CharField(
+        validators=[mobile_regex],
+        max_length=10,
+        verbose_name=_("Business WhatsApp No."),
+        unique=True,
+        null=True,
+        blank=True,
+        default=0
     )
-    biz_address_line_1 = models.CharField(
+    business_address_line_1 = models.CharField(
         max_length=255, blank=True, verbose_name=_("Business Address Line 1")
     )
-    biz_address_line_2 = models.CharField(
+    business_address_line_2 = models.CharField(
         max_length=255, blank=True, verbose_name=_("Business Address Line 2")
     )
-    area_name = models.CharField(max_length=64, blank=True, verbose_name=_("Area Name"))
+    business_area_name = models.CharField(
+        max_length=64, blank=True, verbose_name=_("Area Name")
+    )
     landmark = models.CharField(
         max_length=64, null=True, blank=True, verbose_name=_("Land Mark")
     )
     directions_to_reach = models.TextField(
         null=True, blank=True, verbose_name=_("Direction To Reach")
     )
-    latitude = models.FloatField(default=19.214, blank=True, verbose_name=_("Latitude"))
-    longitude = models.FloatField(
-        default=19.214, blank=True, verbose_name=_("Longitude")
+    latitude = models.FloatField(
+        default=19.214, blank=True, verbose_name=_("Set Latitude")
     )
-    google_map_link = models.CharField(
+    longitude = models.FloatField(
+        default=19.214, blank=True, verbose_name=_("Set Longitude")
+    )
+    biz_googlemap_link = models.CharField(
         max_length=64, null=True, blank=True, verbose_name=_("Google Map Link")
     )
-    zip_code = models.CharField(max_length=10, blank=True, verbose_name=_("Zip Code"))
-    city = models.CharField(max_length=255, blank=True, verbose_name=_("City"))
-    state = models.CharField(max_length=255, blank=True, verbose_name=_("State"))
-    country = models.CharField(
+    business_zip_code = models.CharField(
+        max_length=10, blank=True, verbose_name=_("Zip Code")
+    )
+    business_city = models.CharField(
+        max_length=255, blank=True, verbose_name=_("City")
+    )
+    business_state = models.CharField(
+        max_length=255, blank=True, verbose_name=_("State")
+    )
+    business_country = models.CharField(
         max_length=255, blank=True, verbose_name=_("Country"), default="India"
     )
 
     about_business = models.TextField(blank=True, verbose_name=_("About Business"))
-    gst_no = models.CharField(max_length=20, blank=True, verbose_name=_("GST No"))
-    upload_gst = models.FileField(
-        upload_to=path_and_rename, blank=True, verbose_name=_("Upload GST Doc.")
+    upi_id = models.CharField(max_length=50, blank=True, verbose_name=_("UPI ID"))
+    adhaar_no = models.PositiveBigIntegerField(
+        default=000000000000, blank=True, verbose_name=_("Adhaar No")
+    )
+    adhaar_certificate1 = models.FileField(
+        upload_to=customer_kyc_path, blank=True, verbose_name=_("Adhaar Certificate Front")
+    )
+    adhaar_certificate2 = models.FileField(
+        upload_to=customer_kyc_path, blank=True, verbose_name=_("Adhaar Certificate Back")
+    )
+    gst_no = models.CharField(
+        max_length=20, blank=True, verbose_name=_("GST No")
+    )
+    gst_certificate = models.FileField(
+        upload_to=customer_kyc_path, blank=True, verbose_name=_("Upload GST Doc.")
     )
     pan_no = models.CharField(max_length=20, blank=True, verbose_name=_("PAN No"))
-    upload_pan = models.FileField(
-        upload_to=path_and_rename, blank=True, verbose_name=_("Upload PAN")
+    pan_certificate = models.FileField(
+        upload_to=customer_kyc_path, blank=True, verbose_name=_("Upload PAN")
+    )
+    security_cheque = models.FileField(
+        upload_to=customer_kyc_path, blank=True, verbose_name=_("Security Cheque")
+    )
+    visiting_card = models.FileField(
+        upload_to=customer_kyc_path, blank=True, verbose_name=_("Visiting Card")
     )
     bank_details = models.CharField(
         max_length=255, blank=True, verbose_name=_("Bank Details")

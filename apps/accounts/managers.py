@@ -12,7 +12,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("Must provide a valid Email Address"))
 
     def create_user(
-        self, email, mobile, first_name, last_name, password=None, **extra_fields
+        self, email, first_name, last_name, password=None, **extra_fields
     ):
         if email:
             email = self.normalize_email(email)
@@ -21,8 +21,8 @@ class CustomUserManager(BaseUserManager):
         else:
             raise ValueError(_("Active & Valid Email is mandatory"))
 
-        if not mobile:
-            raise ValueError(_("You must Provide a valid Mobile No."))
+        # if not mobile:
+        #     raise ValueError(_("You must Provide a valid Mobile No."))
 
         if not first_name:
             raise ValueError(_("You must submit your First Name"))
@@ -32,10 +32,10 @@ class CustomUserManager(BaseUserManager):
 
         user = self.model(
             email=email,
-            mobile=mobile,
+            # mobile=mobile,
             first_name=first_name,
             last_name=last_name,
-            full_name=first_name + " " + last_name,
+            full_name=first_name+" "+last_name,
             **extra_fields
         )
 
@@ -46,7 +46,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(
-        self, email, mobile, first_name, last_name, password=None, **extra_fields
+        self, email, first_name, last_name, password=None, **extra_fields
     ):
         """Create and save a SuperUser with the given email and password."""
         extra_fields.setdefault("is_staff", True)
@@ -70,7 +70,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("Active Email is mandatory"))
 
         user = self.create_user(
-            email, mobile, first_name, last_name, password, **extra_fields
+            email, first_name, last_name, password, **extra_fields
         )
         user.save(using=self._db)
         return user
