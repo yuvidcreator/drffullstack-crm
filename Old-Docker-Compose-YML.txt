@@ -1,3 +1,6 @@
+# This working with client --> React - Django API 
+# If any issue comes use this for further development or production
+
 version: "3.3"
 
 services:
@@ -20,13 +23,13 @@ services:
         networks:
             - yantrayug-djreact
 
-    clientrtk:
+    client:
         build:
-            context: ./client-rtk
-            dockerfile: ./docker/local/Dockerfile
+            context: ./client
+            dockerfile: Dockerfile.dev
         restart: on-failure
         volumes:
-            - ./client-rtk:/app
+            - ./client:/app
             - /app/node_modules
         networks:
             - yantrayug-djreact

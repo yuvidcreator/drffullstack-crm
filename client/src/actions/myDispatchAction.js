@@ -14,7 +14,7 @@ export const listMyDispatch = () => async (dispatch) => {
             type: MYDISPATCH_LIST_REQUEST,
         });
 
-        const {data} = await axios.get(`${API_URL}/api/v1/dispatch/all/`);
+        const {data} = await axios.get(`${API_URL}/api/v1/dispatch/`);
 
         dispatch({
             type: MYDISPATCH_LIST_SUCCESS,

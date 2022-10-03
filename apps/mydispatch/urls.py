@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import MyAllDispatchAPIView
+from .views import AllDispatches
 
 
 urlpatterns = [
-    path("all/", MyAllDispatchAPIView.as_view(), name="all-dispatch-list"),
+    path("", AllDispatches.as_view(), name="all-dispatch-list"),
 ]

@@ -1,6 +1,7 @@
 .vscode
 .DS_Store
 client/node_modules
+client-rtk/node_modules
 node_modules
 
 ### Django ###
