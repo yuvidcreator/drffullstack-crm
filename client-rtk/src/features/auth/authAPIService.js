@@ -2,7 +2,7 @@ import axios from 'axios';
 import { API_URL } from '../../config';
 
 
-const REGISTER_URL = `${API_URL}/users/`;
+const REGISTER_URL = "http://127.0.0.1:8080/api/v1/auth/users/";
 const LOGIN_URL = `${API_URL}/auth/jwt/create/`;
 const ACTIVATE_URL = `${API_URL}/auth/users/activation/`;
 
@@ -16,6 +16,7 @@ const register = async (userData) => {
     };
 
     const response = await axios.post(REGISTER_URL, userData, config);
+
     return response.data;
 };
 

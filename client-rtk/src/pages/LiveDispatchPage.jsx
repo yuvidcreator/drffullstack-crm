@@ -83,7 +83,7 @@ const LiveDispatchPage = () => {
                         <>
                         <tbody>
                         {mydispatchelists.map((mdlist) => (
-                            <tr>
+                            <tr key={mdlist.id}>
                                 <td>{mdlist.pkid}</td>
                                 <td>
                                     {newCustDateTime(new Date(mdlist.created_at))}

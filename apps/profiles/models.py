@@ -84,7 +84,7 @@ class Employee(TimeStampUUIDModel):
         upload_to=employee_kyc_path, blank=True, verbose_name=_("Adhaar Certificate Back")
     )
     pan_no = models.CharField(
-        max_length=20, blank=True, verbose_name=_("PAN No"), unique=True
+        max_length=20, blank=True, verbose_name=_("PAN No")
     )
     pan_certificate = models.FileField(
         upload_to=employee_kyc_path, blank=True, verbose_name=_("Upload PAN")
@@ -171,13 +171,12 @@ class Customer(TimeStampUUIDModel):
 
     # Business Related
     business_name = models.CharField(
-        max_length=50, blank=True, null=True, verbose_name=_("Business Name"), unique=True
+        max_length=50, blank=True, null=True, verbose_name=_("Business Name")
     )
     business_wano = models.CharField(
         validators=[mobile_regex],
         max_length=10,
         verbose_name=_("Business WhatsApp No."),
-        unique=True,
         null=True,
         blank=True,
         default=0

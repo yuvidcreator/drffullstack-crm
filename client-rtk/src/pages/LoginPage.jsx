@@ -11,14 +11,12 @@ import { login, reset } from '../features/auth/authSlice';
 const LoginPage = () => {
 
     const [email, setEmail] = useState("");
-
     const [password, setPassword] = useState("");
 
     const dispatch = useDispatch();
-
     const navigate = useNavigate();
 
-    const {user, isError, isLoading, isSuccess, message} = useSelector((state) => state.auth)
+    const {user, isError, isLoading, isSuccess, message} = useSelector((state) => state.auth);
 
     useEffect(() => {
         if (isError) {
@@ -33,7 +31,7 @@ const LoginPage = () => {
     }, [isError, isSuccess, message, user, navigate, dispatch]);
 
     const submitHandler = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         if (!email) {
             toast.error("An Email must be provided");
@@ -66,10 +64,11 @@ const LoginPage = () => {
                     </Row>
 
                     {isLoading && <Spinner />}
+
                     <Row className="mt-3">
                         <Col className="justify-content-center">
                             <Form onSubmit={submitHandler}>
-                                <Form.Group controlId="email">
+                                <Form.Group controlId="email" className="mt-3">
                                     <Form.Label>Email ID</Form.Label>
                                     <Form.Control 
                                         type="email" 
@@ -78,7 +77,7 @@ const LoginPage = () => {
                                         onChange={(e)=>setEmail(e.target.value)} 
                                     />
                                 </Form.Group>
-                                <Form.Group controlId="password">
+                                <Form.Group controlId="password" className="mt-3">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
                                         type="password" 
@@ -94,10 +93,17 @@ const LoginPage = () => {
                         </Col>
                     </Row>
 
-                    <Row className="py-3">
+                    <Row className="py-4">
                         <Col>
                             New Employee?
-                            <Link to="/signup">Register Here....</Link>
+                            <Link to="/signup" className="mx-2">Register Here....</Link>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            Forget Password?
+                            <Link to="/resetpass" className="mx-2">Reset Password</Link>
                         </Col>
                     </Row>
                 </Container>

@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ["password"]
+        exclude = ("password",)
 
     def get_first_name(self, obj):
         return obj.first_name.title()
@@ -29,8 +29,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         represenatation = super(UserSerializer, self).to_representation(instance)
-        # if instance.is_superuser:
-        #     represenatation["is_superuser"] = True
+        if instance.is_active:
+            represenatation["is_active"] = True
+        if instance.is_staff:
+            represenatation["is_staff"] = True
+        if instance.is_superuser:
+            represenatation["is_superuser"] = True
         # if instance.is_mainadmin:
         #     represenatation["is_mainadmin"] = True
         # if instance.is_manager:
@@ -59,7 +63,7 @@ class TokenSerializer(serializers.ModelSerializer):
             "auth_token",
             "is_staff",
             "is_employee",
-            "is_customer",
+            "is_customer"
         )
 
 

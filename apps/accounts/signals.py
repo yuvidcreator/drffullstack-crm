@@ -3,9 +3,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Group
 
-# from apps.accounts.models import User
+from apps.accounts.models import User
 from apps.profiles.models import Customer, Employee
-from djCRMBackend.settings.base import AUTH_USER_MODEL
+# from djCRMBackend.settings.base import AUTH_USER_MODEL
 
 
 # @receiver(post_save, sender=AUTH_USER_MODEL)
@@ -66,26 +66,34 @@ from djCRMBackend.settings.base import AUTH_USER_MODEL
 
 
 
-@receiver(post_save, sender=AUTH_USER_MODEL)
+@receiver(post_save, sender=User)
 def create_user(sender, instance, created, **kwargs):
     if instance.is_employee:
         if created:
-            # cuser = User.objects.create(email=instance.email)
-            # my_customer_group = Group.objects.get_or_create(name='EMPLOYEEs')
-            # my_customer_group[0].user_set.add(cuser)
+            # print(instance)
+            cuser = User.objects.filter(email=instance.email).first()
+            my_customer_group = Group.objects.get_or_create(name='EMPLOYEEs')
+            my_customer_group[0].user_set.add(cuser)
             if instance.email:
                 emp = Employee.objects.create(user=instance)
                 # emp.is_employee = True
                 emp.status = True
                 emp.save()
-            data = {"role": "employee", "group":"EMPLOYEEs"}
+                # print(emp)
+                data = {"role": "employee", "group":"EMPLOYEEs"}
     else:
         if created:
-            # cuser = User.objects.create(email=instance.email)
-            # my_customer_group = Group.objects.get_or_create(name='CUSTOMERs')
-            # my_customer_group[0].user_set.add(cuser)
-            if instance.email:
+            # print(instance.is_customer)
+            instance.is_customer=True
+            cuser = User.objects.filter(email=instance.email).first()
+            cuser.is_customer=True
+            cuser.save()
+            my_customer_group = Group.objects.get_or_create(name='CUSTOMERs')
+            my_customer_group[0].user_set.add(cuser)
+            if instance.email and instance.is_customer:
+                # print(instance)
+                # print(cuser.is_customer)
                 cust = Customer.objects.create(user=instance)
                 cust.status = True
                 cust.save()
-            data = {"role": "customer", "group":"CUSTOMERs"}
+                data = {"role": "customer", "group":"CUSTOMERs"}

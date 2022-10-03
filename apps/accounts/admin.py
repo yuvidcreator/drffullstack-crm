@@ -22,6 +22,7 @@ class UserAdmin(BaseUserAdmin):
         "is_employee",
         "is_customer",
         "is_active",
+        "date_joined"
     ]
     list_display_links = list_display
     list_filter = [
@@ -77,7 +78,7 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2", "is_staff", "is_active"),
+                "fields": ("email", "password1", "password2", "is_staff", "is_active", "is_employee", "is_customer"),
             },
         ),
     )

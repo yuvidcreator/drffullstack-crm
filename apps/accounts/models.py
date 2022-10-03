@@ -52,7 +52,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = [
         "first_name",
         "last_name",
-        "is_employee"
+        "is_employee",
+        "is_customer"
     ]
 
     objects = CustomUserManager()
