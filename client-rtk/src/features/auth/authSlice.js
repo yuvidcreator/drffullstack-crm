@@ -2,10 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authAPIService from './authAPIService';
 
 
+const userToken = JSON.parse(localStorage.getItem("userToken"));
 const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = {
-    user: user ? user : null,
+    userToken: userToken ? userToken : null,
+    user: user ? user: null,
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -15,9 +17,9 @@ const initialState = {
 
 export const register = createAsyncThunk(
     "auth/register",
-    async(user, thunkAPI) => {
+    async(userData, thunkAPI) => {
         try {
-            return await authAPIService.register(user);
+            return await authAPIService.register(userData);
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
             return thunkAPI.rejectWithValue(message);
@@ -28,9 +30,9 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
     "auth/login",
-    async(user, thunkAPI) => {
+    async(userData, thunkAPI) => {
         try {
-            return await authAPIService.login(user);
+            return await authAPIService.login(userData);
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
             return thunkAPI.rejectWithValue(message);
@@ -49,9 +51,9 @@ export const logout = createAsyncThunk(
 
 export const activate = createAsyncThunk(
     "auth/activate",
-    async(user, thunkAPI) => {
+    async(userData, thunkAPI) => {
         try {
-            return authAPIService.activate(user);
+            return authAPIService.activate(userData);
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
             return thunkAPI.rejectWithValue(message);
@@ -80,12 +82,14 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action)=>{
                 state.isLoading = false;
                 state.isSuccess = true;
+                state.userToken = action.payload;
                 state.user = action.payload;
             })
             .addCase(register.rejected, (state, action)=>{
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
+                state.userToken = null;
                 state.user = null;
             })
             .addCase(login.pending, (state)=>{
@@ -94,16 +98,19 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action)=>{
                 state.isLoading = false;
                 state.isSuccess = true;
+                state.userToken = action.payload;
                 state.user = action.payload;
             })
             .addCase(login.rejected, (state, action)=>{
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
+                state.userToken = null;
                 state.user = null;
             })
             .addCase(logout.fulfilled, (state)=>{
-                state.user = null;
+                state.userToken = null;
+                // state.user = null;
             })
             .addCase(activate.pending, (state)=>{
                 state.isLoading = true;
@@ -116,6 +123,7 @@ export const authSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
+                state.userToken = null;
                 state.user = null;
             });
     }

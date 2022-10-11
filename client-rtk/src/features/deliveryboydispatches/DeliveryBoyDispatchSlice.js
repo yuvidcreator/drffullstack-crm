@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import myDispatchAPIService from './myDispatchAPIService';
+import DeliveryBoyDispatchAPIService from './DeliveryboyDispatchAPIService';
 
 
+const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = {
-    mydispatchelists: [],
-    mydispatchset: {},
+    user: user ? user : null,
+    deliveryboydispatchelists: [],
+    deliveryboydispatchset: {},
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -13,12 +15,12 @@ const initialState = {
 };
 
 
-// get all my disptach list
-export const getMyDispatches = createAsyncThunk(
-    "mydispatches/getAllDispatchData", 
-    async (_, thunkAPI) => {
+// get all Delivery Boy's disptach list
+export const getDeliveryBoyDispatchList = createAsyncThunk(
+    "deliveryboydispatches/getAll", 
+    async (user, thunkAPI) => {
         try {
-            return await myDispatchAPIService.getMyDispatches();
+            return await DeliveryBoyDispatchAPIService.getDeliveryBoyDispatchList(user);
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
             return thunkAPI.rejectWithValue(message);
@@ -27,23 +29,24 @@ export const getMyDispatches = createAsyncThunk(
 );
 
 
-export const myDispatchSlice = createSlice({
-    name: 'mydispatch',
+
+export const DeliveryBoyDispatchSlice = createSlice({
+    name: 'deliveryboydispatch',
     initialState,
     reducers: {
         reset: (state) => initialState
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getMyDispatches.pending, (state) => {
+            .addCase(getDeliveryBoyDispatchList.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getMyDispatches.fulfilled, (state, action) => {
+            .addCase(getDeliveryBoyDispatchList.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.mydispatchelists = action.payload.dispatchdata;
             })
-            .addCase(getMyDispatches.rejected, (state, action) => {
+            .addCase(getDeliveryBoyDispatchList.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
@@ -51,5 +54,5 @@ export const myDispatchSlice = createSlice({
     },
 });
 
-export const {reset} = myDispatchSlice.actions;
-export default myDispatchSlice.reducer;
+export const {reset} = DeliveryBoyDispatchSlice.actions;
+export default DeliveryBoyDispatchSlice.reducer;

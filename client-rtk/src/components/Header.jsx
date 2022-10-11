@@ -14,7 +14,7 @@ const Header = () => {
 
     const dispatch = useDispatch();
 
-    const { user } = useSelector((state)=>state.auth);
+    const { user, userToken } = useSelector((state)=>state.auth);
 
     const logoutHandler = () => {
         dispatch(logout());
@@ -46,21 +46,23 @@ const Header = () => {
                             <LinkContainer to="/dispatch">
                                 <Nav.Link>Dispatch</Nav.Link>
                             </LinkContainer>
-                            <LinkContainer to="/employee">
-                                <Nav.Link>Employee</Nav.Link>
-                            </LinkContainer>
 
-                            { user ? (
-                                        <NavDropdown title={user.first_name ? user.first_name : "Welcome"} id="username">
-                                            <LinkContainer to="/profile">
-                                                <NavDropdown.Item>
-                                                    Profile
-                                                </NavDropdown.Item>
+                            { userToken ? (
+                                        <>
+                                            <LinkContainer to="/employee">
+                                                <Nav.Link>Employee</Nav.Link>
                                             </LinkContainer>
-                                            <NavDropdown.Item onClick={logoutHandler}>
-                                                <MdLogin /> Logout
-                                            </NavDropdown.Item>
-                                        </NavDropdown>
+                                            <NavDropdown title={user.employee.first_name ? user.employee.first_name : "Welcome"} id="username">
+                                                <LinkContainer to="/profile">
+                                                    <NavDropdown.Item>
+                                                        Profile
+                                                    </NavDropdown.Item>
+                                                </LinkContainer>
+                                                <NavDropdown.Item onClick={logoutHandler}>
+                                                    <MdLogin /> Logout
+                                                </NavDropdown.Item>
+                                            </NavDropdown>
+                                        </>
                                     ) : (
                                             <NavDropdown title="Accounts" id="collasible-nav-dropdown">
                                                 <LinkContainer to="/login">

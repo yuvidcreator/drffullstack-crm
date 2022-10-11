@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import myDispatchReducer from '../features/mydispatches/myDispatchSlice';
 import authReducer from '../features/auth/authSlice';
+import myDispatchReducer from '../features/mydispatches/myDispatchSlice';
+import DeliveryBoyDispatchReducer from '../features/deliveryboydispatches/DeliveryBoyDispatchSlice';
 
 export const store = configureStore({
   reducer: {
-    myDispatches: myDispatchReducer,
     auth: authReducer,
+    myDispatches: myDispatchReducer,
+    DeliveryBoyDispatches: DeliveryBoyDispatchReducer,
   },
 });

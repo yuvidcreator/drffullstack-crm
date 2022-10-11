@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.mydispatch.models import Dispatch
-from apps.mydispatch.serializers import MyDispatcherializer
+from apps.mydispatch.serializers import DeliveryBoyDispatchSerializer, MyDispatcherializer
 from apps.mydispatch.pagination import MyDisptachListPagination
 # Create your views here.
 
@@ -22,3 +22,12 @@ class AllDispatches(APIView):
         mydispatch = Dispatch.objects.all()
         serializer = MyDispatcherializer(mydispatch, many=True)
         return Response({"dispatchdata": serializer.data}, status=status.HTTP_200_OK)
+
+
+class DeliveryboyDispatchView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Dispatch.objects.all()
+    serializer_class = DeliveryBoyDispatchSerializer
+
+    def get_queryset(self):
+        return self.request.user.dispatch_set.all()

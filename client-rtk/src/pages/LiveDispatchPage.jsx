@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import Spinner from '../components/Spinner';
 import {toast} from 'react-toastify';
-import { getMyDispatches, reset } from '../features/mydispatches/myDispatchSlice'
+import { getMyDispatches} from '../features/mydispatches/myDispatchSlice'
 // import MyDispacthListView from '../components/MyDispacthListView';
 
 
 const LiveDispatchPage = () => {
 
-    const { mydispatchelists, isLoading, isError, isSuccess, message } = useSelector((state) => state.myDispatches);
+    const { mydispatchelists, isLoading, isError, message } = useSelector((state) => state.myDispatches);
 
     const dispatch = useDispatch();
 

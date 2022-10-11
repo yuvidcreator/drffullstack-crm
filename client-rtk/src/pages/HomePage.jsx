@@ -5,14 +5,12 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 const HomePage = () => {
     return (
-        <div className="masthead main-bg-image mt-12">
+        <div className="mt-5 mt-lg-5 mt-md-5">
             <Container className="d-flex h-100 align-items-center justify-content-center text-center">
-                <div className="d-flex justify-content-center">
-                    <div className="text-center">
-                        <h1 className="mx-auto my-0 text-uppercase">
-                            Yantrayug Hero Hub
-                        </h1>
-                        <h2 className="text-white-50 mx-auto mt-2 mb-5">
+                <div className="d-flex justify-content-center mt-5 mt-lg-5 mt-md-5">
+                    <div className="text-center mt-lg-5 mt-md-5 mt-5">
+                        
+                        <h2 className="mx-auto mb-5">
                             The Best Auto Parts store in Pune.
                             The Yantrayug Herohub.
                         </h2>

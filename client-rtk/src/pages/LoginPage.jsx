@@ -16,19 +16,19 @@ const LoginPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {user, isError, isLoading, isSuccess, message} = useSelector((state) => state.auth);
+    const {userToken, isError, isLoading, isSuccess, message} = useSelector((state) => state.auth);
 
     useEffect(() => {
         if (isError) {
             toast.error(message);
         }
 
-        if (isSuccess || user ) {
+        if (isSuccess || userToken ) {
             navigate("/employee");
         }
 
         dispatch(reset());
-    }, [isError, isSuccess, message, user, navigate, dispatch]);
+    }, [isError, isSuccess, message, userToken, navigate, dispatch]);
 
     const submitHandler = (e) => {
         e.preventDefault();

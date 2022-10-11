@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import EmployeeDashboard from './pages/Employee/EmployeeDashboard';
 import ActivatePage from './pages/ActivatePage';
+import Profile from './pages/Employee/Profile';
 
 
 
@@ -22,14 +23,13 @@ const App = () => {
         <main className="py-16">
           <Routes>
             <Route path="/" element={<HomePage />} />
-          </Routes>
-          <Routes>
             <Route path="/dispatch" element={<LiveDispatchPage />} />
             <Route path="/employee" element={<EmployeeDashboard />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/activate/:uid/:token" element={<ActivatePage />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path={"*"} element={<NotFound />} />
           </Routes>
           <ToastContainer theme="dark" />
         </main>
