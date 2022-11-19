@@ -10,7 +10,7 @@ const HomePage = () => {
                 <div className="d-flex justify-content-center mt-5 mt-lg-5 mt-md-5">
                     <div className="text-center mt-lg-5 mt-md-5 mt-5">
                         
-                        <h2 className="mx-auto mb-5">
+                        <h2 className="mx-auto mb-5 mg-top">
                             The Best Auto Parts store in Pune.
                             The Yantrayug Herohub.
                         </h2>

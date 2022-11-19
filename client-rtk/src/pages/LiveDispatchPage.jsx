@@ -60,8 +60,8 @@ const LiveDispatchPage = () => {
                     Yantrayug Dispatch List
                 </h1>
                 <br />
-                <Table striped bordered hover>
-                    <thead>
+                <table className="table table-striped table-hover table-bordered">
+                    <thead className="bg-black text-white">
                         <tr>
                             <th>Sr. No.</th>
                             <th>Entry Date</th>
@@ -112,7 +112,7 @@ const LiveDispatchPage = () => {
                         </tbody>
                         </>
                     }
-                </Table>
+                </table>
             {/* </Container> */}
             </div>
         </>
